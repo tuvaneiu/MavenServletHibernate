@@ -30,6 +30,7 @@
 			<br>
 			<a href="DeleteEmployeeServlet?id=<%=employee.getId()%>" onclick="return confirmFunction()">Delete</a>
 			<a href="updateEmployee.jsp?id=<%=employee.getId()%>">Update</a>
+			<a href="showSalary.jsp?id=<%=employee.getSalary().getSalaryId()%>">Salary Info</a>
 		<%
 		}
 		s.close();
