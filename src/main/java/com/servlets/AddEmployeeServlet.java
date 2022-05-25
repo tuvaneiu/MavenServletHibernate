@@ -2,6 +2,7 @@ package com.servlets;
 
 import com.entities.Employee;
 import com.entities.Position;
+import com.entities.Salary;
 import com.provider.FactoryProvider;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -26,11 +27,17 @@ public class AddEmployeeServlet extends HttpServlet {
             Position position = Position.valueOf(request.getParameter("position"));
 
             Employee employee = new Employee(employee_id, fname, lname, phone, email, dob, position);
+            Salary salary = new Salary(0.0, 0.0, 0.0);
+
+            employee.setSalary(salary);
+            salary.setEmployee(employee);
 
             Session session = FactoryProvider.getFactory().openSession();
             Transaction transaction = session.beginTransaction();
 
             session.save(employee);
+            session.save(salary);
+
             transaction.commit();
 
             session.close();
