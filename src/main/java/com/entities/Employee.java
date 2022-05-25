@@ -6,10 +6,11 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "employee_hiber")
-public class Employee {
+public class Employee implements ComputeSalary{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
+	@PrimaryKeyJoinColumn
 	private int id;
 	@Column(length = 20)
 	private String employeeId;
@@ -24,6 +25,8 @@ public class Employee {
 	private Date dateOfBirth;
 	@Enumerated(EnumType.STRING)
 	private Position position;
+	@OneToOne(targetEntity=Salary.class, cascade=CascadeType.ALL)
+	private Salary salary;
 
 	public Employee(String employeeId, String firstName, String lastName, String phone, String email, Date dateOfBirth,
 					Position position) {
@@ -105,10 +108,34 @@ public class Employee {
 		this.position = position;
 	}
 
+	public Salary getSalary() {
+		return salary;
+	}
+
+	public void setSalary(Salary salary) {
+		this.salary = salary;
+	}
+
 	@Override
 	public String toString() {
-		return "Employee [id=" + id + ", employeeId=" + employeeId + ", firstName=" + firstName + ", lastName="
-				+ lastName + ", phone=" + phone + ", email=" + email + ", dateOfBirth=" + dateOfBirth + ", position="
-				+ position + "]";
+		return "Employee{" +
+				"id=" + id +
+				", employeeId='" + employeeId + '\'' +
+				", firstName='" + firstName + '\'' +
+				", lastName='" + lastName + '\'' +
+				", phone='" + phone + '\'' +
+				", email='" + email + '\'' +
+				", dateOfBirth=" + dateOfBirth +
+				", position=" + position +
+				", salary=" + salary.toString() +
+				'}';
+	}
+
+	@Override
+	public double computeSalary(Salary salary) {
+		Employee employee = salary.getEmployee();
+
+		return (getPayPerHour(employee.getPosition()) * salary.getNumOfWorkingDay() * 8.0 + salary.getAllowance())
+				* (1 - salary.getTaxRate());
 	}
 }
