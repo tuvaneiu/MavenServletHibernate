@@ -17,5 +17,6 @@
 		<property name="format_sql">true</property>
 		
 		<mapping class="com.entities.Employee"/>
+		<mapping class="com.entities.Salary"/>
 	</session-factory>
 </hibernate-configuration>
